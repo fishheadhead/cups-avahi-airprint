@@ -22,7 +22,8 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.
 	&& rm -rf /var/cache/apk/*
 
 # Build and install brlaser from source
-RUN apk add --no-cache git cmake g++ make && \  # 补充 g++、make（编译必需）
+RUN apk add --no-cache git cmake g++ make && \  
+	# 补充 g++、make（编译必需）
     git clone https://github.com/pdewacht/brlaser.git && \
     cd brlaser && \
     # 添加兼容参数，解决 CMake 版本过高问题
