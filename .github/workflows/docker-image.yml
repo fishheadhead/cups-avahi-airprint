@@ -29,8 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # 修正：将表达式压缩为单行，避免 YAML 解析错误
-        platform: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.architecture == 'all' ? ['linux/amd64', 'linux/arm64'] : (github.event_name == 'workflow_dispatch' ? [replace(github.event.inputs.architecture, '-', '/')] : ['linux/amd64', 'linux/arm64']) }}
+        # 关键修正：表达式结尾加空格，冒号后必跟空格
+        platform: [linux/amd64, linux/arm64]
       fail-fast: false
 
     steps:
