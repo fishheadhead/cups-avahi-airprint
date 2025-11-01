@@ -1,4 +1,4 @@
-name: Build Printer Docker Image (No Push)
+name: Build Build Printer Docker Image (No Push)
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       architecture:
-        description: '选择构建的架构（手动触发时生效）'
+        description: '选择构建的架构'
         required: true
         default: 'linux-amd64'
         type: choice
@@ -28,9 +28,13 @@ jobs:
     name: Build ${{ matrix.platform }}
     runs-on: ubuntu-latest
     strategy:
+      # 直接定义架构和对应的标签（无任何函数）
       matrix:
-        # 关键修正：表达式结尾加空格，冒号后必跟空格
-        platform: [linux/amd64, linux/arm64]
+        include:
+          - platform: linux/amd64
+            tag: printer-cups:linux-amd64-local
+          - platform: linux/arm64
+            tag: printer-cups:linux-arm64-local
       fail-fast: false
 
     steps:
@@ -47,7 +51,7 @@ jobs:
           file: ./Dockerfile
           platforms: ${{ matrix.platform }}
           push: false
-          tags: printer-cups:${{ replace(matrix.platform, '/', '-') }}-local
+          tags: ${{ matrix.tag }}  # 使用预定义的合法标签
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,scope=${{ matrix.platform }},mode=max
           build-args: DEBUG=1
