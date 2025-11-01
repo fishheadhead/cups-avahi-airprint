@@ -16,11 +16,11 @@ on:
       architecture:
         description: '选择构建的架构（手动触发时生效）'
         required: true
-        default: 'linux-amd64'  # 同步修改默认值，移除 /
+        default: 'linux-amd64'
         type: choice
         options:
-          - linux-amd64  # 替换 linux/amd64
-          - linux-arm64  # 替换 linux/arm64
+          - linux-amd64
+          - linux-arm64
           - all
 
 jobs:
@@ -29,16 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # 矩阵中用原架构名（供 platforms 使用），标签用替换后的名称
-        platform: ${{ 
-          github.event_name == 'workflow_dispatch' && github.event.inputs.architecture == 'all' 
-            ? ['linux/amd64', 'linux/arm64'] 
-            : (github.event_name == 'workflow_dispatch' 
-              ? [replace(github.event.inputs.architecture, '-', '/')]  # 手动参数替换回 /
-              : ['linux/amd64', 'linux/arm64']
-            )
-          }}
-      fail-fast: false  # 关键：单个架构构建失败，不取消其他架构（方便排查）
+        # 修正：将表达式压缩为单行，避免 YAML 解析错误
+        platform: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.architecture == 'all' ? ['linux/amd64', 'linux/arm64'] : (github.event_name == 'workflow_dispatch' ? [replace(github.event.inputs.architecture, '-', '/')] : ['linux/amd64', 'linux/arm64']) }}
+      fail-fast: false
 
     steps:
       - name: Checkout repository
@@ -54,7 +47,6 @@ jobs:
           file: ./Dockerfile
           platforms: ${{ matrix.platform }}
           push: false
-          # 标签替换 / 为 -（合法格式）
           tags: printer-cups:${{ replace(matrix.platform, '/', '-') }}-local
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,scope=${{ matrix.platform }},mode=max
