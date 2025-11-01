@@ -50,7 +50,7 @@ RUN apk add vim && \
     git clone https://github.com/koenkooi/foo2zjs.git && \
     cd foo2zjs && \
     make && \
-	wget - O sihp1020.dl http://oleg.wl500g.info/hplj/sihp1020.dl && \
+	wget -O sihp1020.dl http://oleg.wl500g.info/hplj/sihp1020.dl && \
     make install && \
 	make cups && \
     cd .. && \
