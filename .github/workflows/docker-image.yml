@@ -34,4 +34,15 @@ jobs:
           tags: printer-cups:arm64-local  # 明确的arm64标签
           cache-from: type=gha,scope=arm64  # 单独的arm64缓存
           cache-to: type=gha,scope=arm64,mode=max
-          build-args: DEBUG=1
+          # 关键：将构建的镜像导出为 tar 文件
+          outputs: type=docker,dest=/tmp/printer-cups-arm64.tar
+
+      - name: Compress image (减小体积)
+        run: gzip /tmp/printer-cups-arm64.tar
+
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: printer-cups-arm64-image
+          path: /tmp/printer-cups-arm64.tar.gz
+          retention-days: 3  # 镜像保留 天，可按需修改
