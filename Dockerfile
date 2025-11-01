@@ -21,34 +21,8 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.
 	perl \
 	&& rm -rf /var/cache/apk/*
 
-# Build and install brlaser from source
-RUN apk add --no-cache git cmake g++ make && \  
-	# 补充 g++、make（编译必需）
-    git clone https://github.com/pdewacht/brlaser.git && \
-    cd brlaser && \
-    # 添加兼容参数，解决 CMake 版本过高问题
-    cmake . -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=Release && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf brlaser
-
-# Build and install gutenprint from source
-RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.5/gutenprint-5.3.5.tar.xz/download && \
-    tar -xJf gutenprint-5.3.5.tar.xz && \
-    cd gutenprint-5.3.5 && \
-    # Patch to rename conflicting PAGESIZE identifiers to GPT_PAGESIZE in all files in src/testpattern
-    find src/testpattern -type f -exec sed -i 's/\bPAGESIZE\b/GPT_PAGESIZE/g' {} + && \
-    ./configure && \
-    make -j$(nproc) && \
-    make install && \
-    cd .. && \
-    rm -rf gutenprint-5.3.5 gutenprint-5.3.5.tar.xz && \
-    # Fix cups-genppdupdate script shebang
-    sed -i '1s|.*|#!/usr/bin/perl|' /usr/sbin/cups-genppdupdate
-
 #foo2zjs 1020 support
-RUN apk add vim && \
+RUN apk add --no-cache git cmake vim && \
     git clone https://github.com/koenkooi/foo2zjs.git && \
     cd foo2zjs && \
     make && \
@@ -56,6 +30,33 @@ RUN apk add vim && \
     make install && \
 	make cups && \
     cd .. && \
+	rm -rf foo2zjs
+
+# Build and install brlaser from source
+#RUN apk add --no-cache git cmake && \  
+#	# 补充 g++、make（编译必需）
+#    git clone https://github.com/pdewacht/brlaser.git && \
+#    cd brlaser && \
+#    # 添加兼容参数，解决 CMake 版本过高问题
+#    cmake . -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=Release && \
+#    make && \
+#    make install && \
+#    cd .. && \
+#    rm -rf brlaser
+*/
+# Build and install gutenprint from source
+#RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.5/gutenprint-5.3.5.tar.xz/download && \
+#    tar -xJf gutenprint-5.3.5.tar.xz && \
+#    cd gutenprint-5.3.5 && \
+#    # Patch to rename conflicting PAGESIZE identifiers to GPT_PAGESIZE in all files in src/testpattern
+#    find src/testpattern -type f -exec sed -i 's/\bPAGESIZE\b/GPT_PAGESIZE/g' {} + && \
+#    ./configure && \
+#    make -j$(nproc) && \
+#    make install && \
+#    cd .. && \
+#    rm -rf gutenprint-5.3.5 gutenprint-5.3.5.tar.xz && \
+#    # Fix cups-genppdupdate script shebang
+#    sed -i '1s|.*|#!/usr/bin/perl|' /usr/sbin/cups-genppdupdate
 
 # This will use port 631
 EXPOSE 631
