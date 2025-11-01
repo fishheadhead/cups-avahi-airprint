@@ -45,6 +45,16 @@ RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/
     # Fix cups-genppdupdate script shebang
     sed -i '1s|.*|#!/usr/bin/perl|' /usr/sbin/cups-genppdupdate
 
+#foo2zjs 1020 support
+RUN apk add vim && \
+    git clone https://github.com/koenkooi/foo2zjs.git && \
+    cd foo2zjs && \
+    make && \
+	wget - O sihp1020.dl http://oleg.wl500g.info/hplj/sihp1020.dl && \
+    make install && \
+	make cups && \
+    cd .. && \
+
 # This will use port 631
 EXPOSE 631
 
