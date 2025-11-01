@@ -1,4 +1,4 @@
-name: Build Build Printer Docker Image (No Push)
+name: Build Printer Docker Image (ARM64 Only)
 
 on:
   push:
@@ -11,32 +11,12 @@ on:
     paths:
       - 'Dockerfile'
       - '.github/workflows/build-docker.yml'
-  workflow_dispatch:
-    inputs:
-      architecture:
-        description: '选择构建的架构'
-        required: true
-        default: 'linux-amd64'
-        type: choice
-        options:
-          - linux-amd64
-          - linux-arm64
-          - all
+  workflow_dispatch:  # 保留手动触发，无需架构选择（仅arm64）
 
 jobs:
-  build:
-    name: Build ${{ matrix.platform }}
+  build-arm64:
+    name: Build ARM64 Image
     runs-on: ubuntu-latest
-    strategy:
-      # 直接定义架构和对应的标签（无任何函数）
-      matrix:
-        include:
-          - platform: linux/amd64
-            tag: printer-cups:linux-amd64-local
-          - platform: linux/arm64
-            tag: printer-cups:linux-arm64-local
-      fail-fast: false
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,14 +24,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
+      - name: Build ARM64 Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ matrix.platform }}
-          push: false
-          tags: ${{ matrix.tag }}  # 使用预定义的合法标签
-          cache-from: type=gha,scope=${{ matrix.platform }}
-          cache-to: type=gha,scope=${{ matrix.platform }},mode=max
+          platforms: linux/arm64  # 仅构建arm64架构
+          push: false  # 不推送
+          tags: printer-cups:arm64-local  # 明确的arm64标签
+          cache-from: type=gha,scope=arm64  # 单独的arm64缓存
+          cache-to: type=gha,scope=arm64,mode=max
           build-args: DEBUG=1
