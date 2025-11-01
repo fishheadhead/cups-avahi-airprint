@@ -43,7 +43,7 @@ RUN apk add --no-cache git cmake vim && \
 #    make install && \
 #    cd .. && \
 #    rm -rf brlaser
-*/
+
 # Build and install gutenprint from source
 #RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.5/gutenprint-5.3.5.tar.xz/download && \
 #    tar -xJf gutenprint-5.3.5.tar.xz && \
