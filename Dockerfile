@@ -12,6 +12,7 @@ RUN git clone https://github.com/OpenPrinting/cups-filters.git && \
     make install
 
 # Install the packages we need. Avahi will be included
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 RUN apk add cups-libs cups-client build-base python3 py3-pycups cups-pdf hplip avahi && \
 	rm -rf /var/cache/apk/*
 
