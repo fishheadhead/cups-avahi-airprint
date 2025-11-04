@@ -17,9 +17,16 @@ RUN apk add --no-cache python3-dev
 RUN apk add --no-cache build-base
 RUN apk add --no-cache wget
 RUN apk add --no-cache rsync
-# 修复：替换 py3-pycups 为 pycups（Alpine 标准包名）
-# 指定具体版本安装
-RUN apk add --no-cache pycups=2.0.1-r2
+# 核心：ARM 架构专属——从源码编译安装 pycups（无架构限制）
+RUN wget https://files.pythonhosted.org/packages/source/p/pycups/pycups-2.0.1.tar.gz && \
+    tar -zxvf pycups-2.0.1.tar.gz && \
+    cd pycups-2.0.1 && \
+    # 明确指定 CUPS 头文件和库文件路径，确保编译成功
+    CFLAGS="-I/usr/include/cups" LDFLAGS="-L/usr/lib -lcups" python3 setup.py install && \
+    cd .. && \
+    # 清理源码文件，减少镜像体积
+    rm -rf pycups-2.0.1*
+# 继续安装其他依赖
 RUN apk add --no-cache perl
 RUN rm -rf /var/cache/apk/*
 
