@@ -17,7 +17,8 @@ RUN apk add --no-cache python3-dev
 RUN apk add --no-cache build-base
 RUN apk add --no-cache wget
 RUN apk add --no-cache rsync
-RUN apk add --no-cache py3-pycups
+# 修复：替换 py3-pycups 为 pycups（Alpine 标准包名）
+RUN apk add --no-cache pycups
 RUN apk add --no-cache perl
 RUN rm -rf /var/cache/apk/*
 
