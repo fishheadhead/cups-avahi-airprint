@@ -32,6 +32,25 @@ RUN apk add --no-cache git cmake vim && \
     cd .. && \
 	rm -rf foo2zjs
 
+RUN RUN apk add --no-cache \
+    automake \
+    gettext-dev \
+    libtool \
+    m4 \
+    autoconf \
+    mupdf-tools \
+    jpeg-dev \
+    libpng-dev \
+    tiff-dev \
+    libexif-dev \
+    lcms2-dev \
+    freetype-dev \
+    qpdf \
+    qpdf-dev \
+    dbus \
+    dbus-dev \
+	&& rm -rf /var/cache/apk/*
+
 # Build and install brlaser from source
 #RUN apk add --no-cache git cmake && \  
 #	# 补充 g++、make（编译必需）
