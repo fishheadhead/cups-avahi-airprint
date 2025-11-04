@@ -1,7 +1,6 @@
 FROM alpine:3.19
 # workflow
 # Install the packages we need. Avahi will be included
-# Install the packages we need. Avahi will be included
 RUN apk add --update cups \
 	cups-libs \
 	cups-pdf \
