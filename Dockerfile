@@ -1,29 +1,25 @@
 FROM alpine:3.19
 # workflow
 # Install the packages we need. Avahi will be included
-RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
-RUN apk add --update python3
-RUN apk add --update python3-dev
-RUN apk add --update cups
-RUN apk add --update cups-libs
-RUN apk add --update cups-client
-RUN apk add --update cups-filters
-RUN apk add --update cups-dev
-RUN apk add --update ghostscript
-RUN apk add --update hplip
-RUN apk add --update avahi
-RUN apk add --update inotify-tools
-RUN apk add --update build-base
-RUN apk add --update wget
-RUN apk add --update rsync
-RUN apk add --update perl
-RUN apk add --update py3-pip
-# 先安装系统依赖，再通过 pip 安装
-RUN apk add --update gcc musl-dev linux-headers
-RUN pip3 install --no-cache-dir pycups
-RUN rm -rf /var/cache/apk/*
-
-RUN rm -rf /var/cache/apk/*
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
+	apk add --update cups \
+	cups-libs \
+	cups-pdf \
+	cups-client \
+	cups-filters \
+	cups-dev \
+	ghostscript \
+	hplip \
+	avahi \
+	inotify-tools \
+	python3 \
+	python3-dev \
+	build-base \
+	wget \
+	rsync \
+	py3-pycups \
+	perl \
+	&& rm -rf /var/cache/apk/*
 
 #foo2zjs 1020 support
 RUN apk add --no-cache git cmake vim && \
