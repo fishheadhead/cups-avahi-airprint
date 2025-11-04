@@ -4,9 +4,10 @@ FROM alpine:3.19
 RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
 RUN apk add --update python3
 RUN apk add --update python3-dev
+RUN apk add --update py3-pip
+RUN pip3 install pycups
 RUN apk add --update cups
 RUN apk add --update cups-libs
-RUN apk add --update cups-pdf
 RUN apk add --update cups-client
 RUN apk add --update cups-filters
 RUN apk add --update cups-dev
@@ -17,8 +18,8 @@ RUN apk add --update inotify-tools
 RUN apk add --update build-base
 RUN apk add --update wget
 RUN apk add --update rsync
-RUN apk add --update py3-pycups
 RUN apk add --update perl
+
 RUN rm -rf /var/cache/apk/*
 
 #foo2zjs 1020 support
