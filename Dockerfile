@@ -1,20 +1,41 @@
 FROM alpine:3.20
-# workflow
-# make cups-filters 1.x for https://github.com/OpenPrinting/cups-filters/pull/657
-RUN apk add git automake gettext-dev libtool m4 autoconf  mupdf-tools jpeg-dev libpng-dev tiff-dev libexif-dev lcms2-dev freetype-dev cups qpdf qpdf-dev dbus dbus-dev gcc g++ make cups-dev fontconfig-dev ghostscript
-RUN rm -rf /var/cache/apk/*
-RUN git clone https://github.com/OpenPrinting/cups-filters.git && \
-	cd cups-filters && \
-	git checkout 1.x && \
-	./autogen.sh && \
-	./configure --disable-poppler --disable-braille && \
-	make -j$(nproc) && \
-    make install
 
 # Install the packages we need. Avahi will be included
-RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
-RUN apk add cups-libs cups-client build-base python3 py3-pycups cups-pdf hplip avahi && \
-	rm -rf /var/cache/apk/*
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
+	apk add --update cups \
+	cups-libs \
+	cups-pdf \
+	cups-client \
+	cups-filters \
+	cups-dev \
+	ghostscript \
+	hplip \
+	avahi \
+	inotify-tools \
+	python3 \
+	python3-dev \
+	build-base \
+	wget \
+	rsync \
+	py3-pycups \
+	perl \
+	&& rm -rf /var/cache/apk/*
+
+# make cups-filters 1.x for https://github.com/OpenPrinting/cups-filters/pull/657
+#RUN apk add git automake gettext-dev libtool m4 autoconf  mupdf-tools jpeg-dev libpng-dev tiff-dev libexif-dev lcms2-dev freetype-dev cups qpdf qpdf-dev dbus dbus-dev gcc g++ make cups-dev fontconfig-dev ghostscript
+#RUN rm -rf /var/cache/apk/*
+#RUN git clone https://github.com/OpenPrinting/cups-filters.git && \
+#	cd cups-filters && \
+#	git checkout 1.x && \
+#	./autogen.sh && \
+#	./configure --disable-poppler --disable-braille && \
+#	make -j$(nproc) && \
+ #   make install
+
+# Install the packages we need. Avahi will be included
+#RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+#RUN apk add cups-libs cups-client build-base python3 py3-pycups cups-pdf hplip avahi && \
+#	rm -rf /var/cache/apk/*
 
 #foo2zjs 1020 support
 RUN apk add --no-cache git cmake vim && \
